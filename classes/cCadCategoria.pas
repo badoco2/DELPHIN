@@ -47,16 +47,33 @@ begin
 end;
 
 function TCategoria.Atualizar: Boolean;
+var Qry:TZQuery;
 begin
-      ShowMessage('Atualizado');
-      Result:=true;
+      try
+         Result:=true;
+         Qry:=TZQuery.Create(nil)    ;
+         Qry.Connection:=ConexaoDB;
+         Qry.SQL.Clear;
+         Qry.SQL.Add('UPDATE categorias SET descricao = :descricao WHERE categoria_id = :categoria_id ;' );
+         Qry.ParamByName('categoria_id').AsInteger:=Self.F_categoriaID;
+         Qry.ParamByName('descricao').AsString:=Self.F_descricao;  // da para usar o value no lugar do As String
+         try
+             Qry.ExecSQL;
+         Except
+             Result:=false;
+         end;
+
+      finally
+          if Assigned(Qry) then
+              FreeAndNil(Qry);
+      end;
 end;
 
 function TCategoria.Inserir: Boolean;
 var Qry:TZQuery;
 begin
       try
-         Result:=true; 
+         Result:=true;
          Qry:=TZQuery.Create(nil)    ;
          Qry.Connection:=ConexaoDB;
          Qry.SQL.Clear;

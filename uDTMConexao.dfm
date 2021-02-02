@@ -13,7 +13,9 @@ object DTMPrincipal: TDTMPrincipal
     User = 'sa'
     Password = 'aeade'
     Protocol = 'mssql'
-    LibraryLocation = 'C:\Users\alexa\Documents\Delphin\VendasSistema\ntwdblib.dll'
+    LibraryLocation = 
+      'C:\Users\alexa\Documents\Delphin\VendasSistema\DELPHIN\ntwdblib.' +
+      'dll'
     Left = 80
     Top = 64
   end

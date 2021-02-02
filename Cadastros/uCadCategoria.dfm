@@ -1,6 +1,6 @@
 inherited frmCadCategoria: TfrmCadCategoria
   Caption = 'Cad. Categoria'
-  ExplicitTop = -156
+  ExplicitTop = -137
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl

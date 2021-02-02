@@ -53,8 +53,11 @@ begin
 
    if (EstadoDoCadastro=ecInserir) then
       Result:=oCategoria.Inserir
-   else if (EstadoDoCadastro=ecAlterar) then
-      Result:=oCategoria.Atualizar
+   else if (EstadoDoCadastro=ecAlterar) then begin
+      Result:=oCategoria.Atualizar ;
+      MessageDlg('Erro na gravação!! ', mtWarning, [mbok],0)
+   end;
+
 end;
 procedure TfrmCadCategoria.gridListaDblClick(Sender: TObject);
 begin
