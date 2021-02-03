@@ -26,7 +26,7 @@ Type
       destructor Destroy; override;
       function Inserir:Boolean;
       function Atualizar:Boolean;
-      function Apagar:Boolean;
+      function Apagar(id:integer):Boolean;
       function Selecionar(id:integer):Boolean;
     published
       property codigo:Integer read getCodigo write setCodigo;
@@ -41,22 +41,62 @@ implementation
 {$region 'CRUD'}
 
 function TCategoria.Apagar: Boolean;
+var Qry:TZQuery;
 begin
-      ShowMessage('Apagado');
-      Result:=true;
+  if MessageDlg('Apagar o Registro: '+#13+#13+
+                'codgio: '+ IntToStr(F_categoriaID)+ #13+
+                'Descrição: ' + F_descricao,mtInformation,[mbYes, mbNo],0) = mrNo then
+    begin
+      Result:=false;
+      abort;
+    end;
+
+    try
+      Result:= True;
+      Qry:=TZQuery.Create(nil);
+      Qry.Connection:=ConexaoDB;
+      Qry.SQL.Clear;
+      Qry.SQL.Add('DELETE FROM categorias WHERE categoria_id = :categoria_id');
+      Qry.ParamByName('categoria_id').AsInteger := F_categoriaId;
+      TRY
+        Qry.ExecSQL;
+      FINALLY
+        Result:=False;
+      END;
+    finally
+      if Assigned(Qry) then
+         FreeAndNil(Qry);
+    end;
 end;
 
 function TCategoria.Atualizar: Boolean;
+var Qry:TZQuery;
 begin
-      ShowMessage('Atualizado');
-      Result:=true;
+      try
+         Result:=true;
+         Qry:=TZQuery.Create(nil)    ;
+         Qry.Connection:=ConexaoDB;
+         Qry.SQL.Clear;
+         Qry.SQL.Add('UPDATE categorias SET descricao = :descricao WHERE categoria_id = :categoria_id ;' );
+         Qry.ParamByName('categoria_id').AsInteger:=Self.F_categoriaID;
+         Qry.ParamByName('descricao').AsString:=Self.F_descricao;  // da para usar o value no lugar do As String
+         try
+             Qry.ExecSQL;
+         Except
+             Result:=false;
+         end;
+
+      finally
+          if Assigned(Qry) then
+              FreeAndNil(Qry);
+      end;
 end;
 
 function TCategoria.Inserir: Boolean;
 var Qry:TZQuery;
 begin
       try
-         Result:=true; 
+         Result:=true;
          Qry:=TZQuery.Create(nil)    ;
          Qry.Connection:=ConexaoDB;
          Qry.SQL.Clear;
@@ -83,7 +123,7 @@ begin
          Qry.Connection:=ConexaoDB;
          Qry.SQL.Clear;
          Qry.SQL.Add('SELECT categoria_id, descricao FROM categorias WHERE categoria_id= :categoria_id' );
-         Qry.ParamByName('categoria_id').AsInteger:=codigo;
+         Qry.ParamByName('categoria_id').AsInteger:=id;
          try
              Qry.Open;
 

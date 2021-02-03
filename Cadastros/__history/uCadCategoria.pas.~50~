@@ -45,16 +45,16 @@ begin
     if edtCategoriaID.Text<>EmptyStr then
         oCategoria.codigo:=StrToInt(edtCategoriaID.Text)
     else
-
-    oCategoria.descricao:=edtDescricao.Text;
-
-
-
+      oCategoria.codigo:=0;
+      oCategoria.descricao:=edtDescricao.Text;
 
    if (EstadoDoCadastro=ecInserir) then
       Result:=oCategoria.Inserir
-   else if (EstadoDoCadastro=ecAlterar) then
-      Result:=oCategoria.Atualizar
+   else if (EstadoDoCadastro=ecAlterar) then begin
+      Result:=oCategoria.Atualizar ;
+
+   end;
+
 end;
 procedure TfrmCadCategoria.gridListaDblClick(Sender: TObject);
 begin
@@ -71,7 +71,6 @@ if oCategoria.Selecionar(qryLista.FieldByName('categoria_id').AsInteger) then
       edtDescricao.Text:=oCategoria.descricao;
     end
     else begin
-      ShowMessage('Erro de teste');
       btnCancelar.Click;
       Abort;
     end;

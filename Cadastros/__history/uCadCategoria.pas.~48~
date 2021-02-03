@@ -53,8 +53,11 @@ begin
 
    if (EstadoDoCadastro=ecInserir) then
       Result:=oCategoria.Inserir
-   else if (EstadoDoCadastro=ecAlterar) then
-      Result:=oCategoria.Atualizar
+   else if (EstadoDoCadastro=ecAlterar) then begin
+      Result:=oCategoria.Atualizar ;
+      MessageDlg('Erro na gravação!! ', mtWarning, [mbok],0)
+   end;
+
 end;
 procedure TfrmCadCategoria.gridListaDblClick(Sender: TObject);
 begin
@@ -67,11 +70,10 @@ procedure TfrmCadCategoria.btnAlterarClick(Sender: TObject);
 begin
 if oCategoria.Selecionar(qryLista.FieldByName('categoria_id').AsInteger) then
     begin
-      edtCategoriaID.Text:=IntToStr('carai');
+      edtCategoriaID.Text:=IntToStr(oCategoria.codigo);
       edtDescricao.Text:=oCategoria.descricao;
     end
     else begin
-      ShowMessage('Erro de teste');
       btnCancelar.Click;
       Abort;
     end;

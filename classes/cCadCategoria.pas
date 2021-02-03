@@ -41,9 +41,32 @@ implementation
 {$region 'CRUD'}
 
 function TCategoria.Apagar: Boolean;
+var Qry:TZQuery;
 begin
-      ShowMessage('Apagado');
-      Result:=true;
+  if MessageDlg('Apagar o Registro: '+#13+#13+
+                'codgio: '+ IntToStr(F_categoriaID)+ #13+
+                'Descrição: ' + F_descricao,mtInformation,[mbYes, mbNo],0) = mrNo then
+    begin
+      Result:=false;
+      abort;
+    end;
+
+    try
+      Result:= True;
+      Qry:=TZQuery.Create(nil);
+      Qry.Connection:=ConexaoDB;
+      Qry.SQL.Clear;
+      Qry.SQL.Add('DELETE FROM categorias WHERE categoria_id = :categoria_id');
+      Qry.ParamByName('categoria_id').AsInteger := F_categoriaId;
+      TRY
+        Qry.ExecSQL;
+      FINALLY
+        Result:=False;
+      END;
+    finally
+      if Assigned(Qry) then
+         FreeAndNil(Qry);
+    end;
 end;
 
 function TCategoria.Atualizar: Boolean;

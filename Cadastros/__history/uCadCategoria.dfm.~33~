@@ -1,9 +1,9 @@
 inherited frmCadCategoria: TfrmCadCategoria
   Caption = 'Cad. Categoria'
-  ExplicitTop = 2
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
+    ActivePage = TabManutencao
     inherited TabListagem: TTabSheet
       inherited gridLista: TDBGrid
         Columns = <
@@ -55,7 +55,6 @@ inherited frmCadCategoria: TfrmCadCategoria
     end
   end
   inherited qryLista: TZQuery
-    Active = True
     SQL.Strings = (
       'SELECT *'
       'FROM categorias;')

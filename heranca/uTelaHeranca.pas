@@ -87,7 +87,7 @@ begin
       qryLista.Refresh;
     end
     else begin
-      MessageDlg('Erro na Exclusao!! ', mtError, [mbok],0)
+      qryLista.Refresh;
     end;
   finally
     EstadoDoCadastro := ecNenhum

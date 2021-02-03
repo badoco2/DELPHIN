@@ -36,7 +36,11 @@ implementation
 {$region 'Override'}
 function TfrmCadCategoria.Apagar: Boolean;
 begin
-     Result:=oCategoria.Apagar;
+  if oCategoria.Selecionar(qryLista.FieldByName('categoria_id').AsInteger) then
+  begin
+       Result:=oCategoria.Apagar;
+  end;
+
 end;
 
 function TfrmCadCategoria.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
@@ -45,17 +49,14 @@ begin
     if edtCategoriaID.Text<>EmptyStr then
         oCategoria.codigo:=StrToInt(edtCategoriaID.Text)
     else
-
-    oCategoria.descricao:=edtDescricao.Text;
-
-
-
+      oCategoria.codigo:=0;
+      oCategoria.descricao:=edtDescricao.Text;
 
    if (EstadoDoCadastro=ecInserir) then
       Result:=oCategoria.Inserir
    else if (EstadoDoCadastro=ecAlterar) then begin
       Result:=oCategoria.Atualizar ;
-      MessageDlg('Erro na gravação!! ', mtWarning, [mbok],0)
+
    end;
 
 end;

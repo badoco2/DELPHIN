@@ -39,8 +39,9 @@ type
     procedure mskPesquisaChange(Sender: TObject);
     procedure btnGravarClick(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
+    procedure gridListaDblClick(Sender: TObject);
   private
-    EstadoDoCadastro:TEstadoDoCadastro;
+
     procedure ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar,
     btnApagar:TBitBtn; btnNavigator:TDBNavigator; pgcPrincipal:TPageControl;
     Flag:Boolean);
@@ -49,11 +50,12 @@ type
     procedure ExibirLabelIndice(Campo: string; aLabel: TLabel);
     function ExisteCampoObrigatorio: Boolean;
     procedure DesabilitarEditPK;
+    procedure LimparEdits;
 
   public
-
+     EstadoDoCadastro:TEstadoDoCadastro;
     IndiceAtual:string;
-    function Excluir:Boolean; virtual;
+    function Apagar:Boolean; virtual;
     function Gravar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; virtual;
     function Novo:Boolean; virtual;
 
@@ -78,9 +80,11 @@ end;
 procedure TfrmTelaHerenca.btnApagarClick(Sender: TObject);
 begin
   try
-    if (Excluir) then begin
+    if (Apagar) then begin
       ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar, btnNavigator,pgcPrincipal, true);
       ControlarIndiceTab(pgcPrincipal, 0);
+      LimparEdits;
+      qryLista.Refresh;
     end
     else begin
       MessageDlg('Erro na Exclusao!! ', mtError, [mbok],0)
@@ -95,6 +99,8 @@ begin
   ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar, btnNavigator,pgcPrincipal, true);
   ControlarIndiceTab(pgcPrincipal, 0);
   EstadoDoCadastro := ecNenhum;
+  LimparEdits
+
 end;
 
 
@@ -108,6 +114,7 @@ procedure TfrmTelaHerenca.btnNovoClick(Sender: TObject);
 begin
   ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar, btnNavigator,pgcPrincipal, false);
   EstadoDoCadastro := ecInserir;
+  LimparEdits
 end;
 
 procedure TfrmTelaHerenca.ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar:TBitBtn;
@@ -162,6 +169,11 @@ end;
 
 
 
+
+procedure TfrmTelaHerenca.gridListaDblClick(Sender: TObject);
+begin
+btnAlterar.Click;
+end;
 
 procedure TfrmTelaHerenca.gridListaTitleClick(Column: TColumn);
 begin
@@ -233,10 +245,24 @@ begin
 
 end;
 
+procedure TfrmTelaHerenca.LimparEdits;
+var i:integer;
+begin
+  for i := 0 to ComponentCount -1 do begin
+    if (Components[i] is TLabeledEdit) then begin
+      TLabeledEdit(Components[i]).Text:=EmptyStr;
+    end
+    else if (Components[i] is TEdit) then
+      TEdit(Components[i]).Text:=EmptyStr;
+
+  end;
+
+end;
+
 {$endregion}
 
 {$Region 'Metodos de Excluir'}
-function TfrmTelaHerenca.Excluir: Boolean;
+function TfrmTelaHerenca.Apagar: Boolean;
 begin
   ShowMessage('Deletado');
   result:= True;
@@ -271,6 +297,8 @@ begin
                       btnApagar, btnNavigator, pgcPrincipal,true);
       ControlarIndiceTab(pgcPrincipal, 0);
       EstadoDoCadastro:=ecNenhum;
+      LimparEdits;
+      qryLista.Refresh;
     end
     else begin
       MessageDlg('Erro na gravação!! ', mtWarning, [mbok],0)

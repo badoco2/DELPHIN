@@ -54,7 +54,7 @@ begin
          Qry:=TZQuery.Create(nil)    ;
          Qry.Connection:=ConexaoDB;
          Qry.SQL.Clear;
-         Qry.SQL.Add('UPDATE categorias SET descricao = :descricao WHERE categoria_id = :categoria_id;' );
+         Qry.SQL.Add('UPDATE categorias SET descricao = :descricao WHERE categoria_id = :categoria_id ;' );
          Qry.ParamByName('categoria_id').AsInteger:=Self.F_categoriaID;
          Qry.ParamByName('descricao').AsString:=Self.F_descricao;  // da para usar o value no lugar do As String
          try
